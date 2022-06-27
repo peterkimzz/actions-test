@@ -1,28 +1,28 @@
-name: "Create an Tag"
+name: Create an Tag
 
-description: "Create a Tag"
+description: Create a Tag
 
 branding:
-  icon: "tag"
+  icon: tag
 
 inputs:
   github_token:
-    description: "The GitHub token"
+    description: The GitHub token
     required: false
   sha:
-    description: "The commit sha"
+    description: The commit sha
     required: false
   tag:
-    description: "The tag name"
+    description: The tag name
     required: false
   comment:
-    description: "The message"
+    description: The message
     required: true
 
 outputs:
   ref:
-    description: "The ref"
+    description: The ref
 
 runs:
-  using: "node12"
-  main: "dist/index.js"
+  using: node16
+  main: dist/main.js
