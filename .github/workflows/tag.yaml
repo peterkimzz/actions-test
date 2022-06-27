@@ -1,0 +1,16 @@
+name: Pull Request is merged
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  job1:
+    name: Job1
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Add a tag of the date version
+        uses: mydea/action-tag-date-version@v20
