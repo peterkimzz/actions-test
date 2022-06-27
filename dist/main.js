@@ -46,7 +46,7 @@ function run() {
             const octokit = github.getOctokit(token);
             const context = github.context;
             const sha = core.getInput("sha") || context.sha;
-            const tagName = core.getInput("tag") || (0, dayjs_1.default)().format("YY.MM.DD.sss");
+            const tagName = core.getInput("tag") || (0, dayjs_1.default)().format("YY.MMDD.ss");
             const message = core.getInput("message");
             const tagRequest = yield octokit.rest.git.createTag(Object.assign(Object.assign({}, context.repo), { tag: tagName, message, object: sha, type: "commit" }));
             const tag = tagRequest.data;
@@ -60,7 +60,7 @@ function run() {
             core.setOutput("ref", ref.ref);
         }
         catch (error) {
-            core.setFailed(error.message);
+            core.setFailed(error === null || error === void 0 ? void 0 : error.message);
         }
     });
 }
