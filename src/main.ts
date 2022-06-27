@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 
 async function run(): Promise<void> {
   try {
-    const token = (core.getInput("GITHUB_TOKEN") ||
+    const token = (core.getInput("github_token") ||
       process.env.GITHUB_TOKEN) as string;
 
     const octokit = github.getOctokit(token);
