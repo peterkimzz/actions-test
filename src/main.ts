@@ -10,25 +10,24 @@ async function run() {
     const octokit = github.getOctokit(token);
     const context = github.context;
 
-    const sha = core.getInput("sha") || context.sha;
     const tagName = core.getInput("tag") || dayjs().format("YY.MMDDmm.ss");
     const message = core.getInput("message");
 
     const tagRequest = await octokit.rest.git.createTag({
       ...context.repo,
-      tag: tagName,
       message,
-      object: sha,
+      tag: tagName,
       type: "commit",
+      object: context.sha,
     });
 
     const tag = tagRequest.data;
 
     const refRequest = await octokit.rest.git.createRef({
-      owner: context.repo.owner,
-      repo: context.repo.repo,
-      ref: `refs/tags/${tag.tag}`,
       sha: tag.object.sha,
+      repo: context.repo.repo,
+      owner: context.repo.owner,
+      ref: `refs/tags/${tag.tag}`,
     });
 
     const ref = refRequest.data;
