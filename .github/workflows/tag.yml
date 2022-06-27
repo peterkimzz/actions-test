@@ -12,4 +12,6 @@ jobs:
         with:
           ref: "staging"
 
-      - uses: ./
+      - uses: .
+        with:
+          comment: test message
