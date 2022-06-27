@@ -1,0 +1,24 @@
+name: "Create an Tag"
+description: "Create a Tag"
+branding:
+  icon: "tag"
+  color: "blue"
+inputs:
+  github_token:
+    description: "The GitHub token (if not provided the environment variable GITHUB_TOKEN will be used instead)"
+    required: false
+  sha:
+    description: "The commit sha"
+    required: false
+  tag:
+    description: "The tag name"
+    required: true
+  message:
+    description: "The message"
+    required: true
+outputs:
+  ref:
+    description: "The ref"
+runs:
+  using: "node12"
+  main: "dist/index.js"
