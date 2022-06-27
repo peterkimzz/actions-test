@@ -2,7 +2,7 @@ import * as core from "@actions/core";
 import * as github from "@actions/github";
 import dayjs from "dayjs";
 
-async function run(): Promise<void> {
+async function run() {
   try {
     const token = (core.getInput("github_token") ||
       process.env.GITHUB_TOKEN) as string;
