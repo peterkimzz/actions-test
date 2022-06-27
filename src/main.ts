@@ -7,6 +7,8 @@ async function run(): Promise<void> {
     const token = (core.getInput("github_token") ||
       process.env.GITHUB_TOKEN) as string;
 
+    console.log("token", token);
+
     const octokit = github.getOctokit(token);
     const context = github.context;
 
