@@ -4,10 +4,8 @@ import dayjs from "dayjs";
 
 async function run(): Promise<void> {
   try {
-    const token = (core.getInput("github_token") ||
+    const token = (core.getInput("GITHUB_TOKEN") ||
       process.env.GITHUB_TOKEN) as string;
-
-    console.log("token", token);
 
     const octokit = github.getOctokit(token);
     const context = github.context;
@@ -36,7 +34,7 @@ async function run(): Promise<void> {
     const ref = refRequest.data;
     core.setOutput("ref", ref.ref);
   } catch (error) {
-    core.setFailed(error.message);
+    core.setFailed(error?.message);
   }
 }
 
