@@ -1,7 +1,10 @@
 name: "Create an Tag"
+
 description: "Create a Tag"
+
 branding:
   icon: "tag"
+
 inputs:
   github_token:
     description: "The GitHub token"
@@ -15,9 +18,11 @@ inputs:
   comment:
     description: "The message"
     required: true
+
 outputs:
   ref:
     description: "The ref"
+
 runs:
   using: "node12"
   main: "dist/index.js"
