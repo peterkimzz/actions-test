@@ -2,8 +2,6 @@ name: Pull Request is merged
 
 on:
   push:
-    branches:
-      - "main"
 
 jobs:
   job1:
