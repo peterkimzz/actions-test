@@ -12,6 +12,6 @@ jobs:
         with:
           ref: "staging"
 
-      - uses: ./dist
+      - uses: ./
         with:
           comment: test message
