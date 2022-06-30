@@ -43,14 +43,15 @@ yearweek="${year:2:2}${weeknumber}"
 if [ -z ${override_version} ]; then
     lastest=`git tag | grep "staging*" | sort -g | tail -1`
     latestHead=`echo $lastest | cut -d. -f1`
+    latestCutHead=${latestHead/staging-/}
     latestYearweek=`echo $lastest | cut -d. -f2`
     latestBuild=`echo $lastest | cut -d. -f3`
 
-    printf "$latestHead\n"
-    printf "$latestYearweek\n"
-    printf "$latestBuild\n"
+    printf "lastHead: $latestCutHead $h\n"
+    printf "lastYearweek: $latestYearweek\n"
+    printf "lastBuild: $latestBuild\n"
 
-    printf "latest $latestHead.$latestYearweek.$latestBuild\n"
+    printf "latest $latestCutHead.$latestYearweek.$latestBuild\n"
 
     if [ -z ${lastest} ]; then
         head="0"
