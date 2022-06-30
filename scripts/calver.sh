@@ -25,8 +25,8 @@ done
 echo "fetching latest tags from remote...";
 FETCH=`git fetch --all 2> /dev/null`
 
-tags='git tag | sort -g'
-printf $tags;
+git tag | sort -g > tag.txt
+cat tag.txt
 
 # this prevents from having 1801 at the last week of the year 2019. It should be 1901.
 if [[ ${weeknumber} -eq 1 ]] && [[ `date -u -d ${forced_date} +%-d` -gt 20 ]]; then
