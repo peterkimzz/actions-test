@@ -9,7 +9,7 @@ echo "fetching latest tags from remote...";
 # LATEST_TAG=`git tag | sort -g | tail -1`;
 
 # if [ -z $LATEST_TAG]; then
-#   echo "there is no tag";
+#   echo "there is no tag";;
 # else
 #   echo $LATEST_TAG;
 # fi
