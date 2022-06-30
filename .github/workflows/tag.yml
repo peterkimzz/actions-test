@@ -54,7 +54,6 @@ jobs:
           yearweek="${year:2:2}${weeknumber}"
           # endregion making yearweek
 
-
           if [ -z ${override_version} ]; then
               # By default, version is set to 0.
               if [ -z ${head} ]; then
