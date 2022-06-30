@@ -1,82 +1,84 @@
-BRANCH="main"
-DRY_RUN=false
-PATCH_RUN=false
-INC=0;
-PATCH=0;
-usage() {
-  echo -e "\nUsage: $0 --branch \"main\" --version=\"20.09\" --dry-run" \
-          "\n" \
-          "\n\t--branch - source of the branch where the tag comes from, defaults to main" \
-          "\n\t--version - version to release, defaults to current yy.mm" \
-          "\n\t--patch - adds a patch incrementer after dd, i.e yy.mm.dd-p" \
-          "\n\t--dry-run - check tag without push" \
-          "\n\t--help - prints usages"  >&2
-  exit 1
-}
+version=""
+yearweek=""
+year=`date +%Y`
+weeknumber=`date +%V` # ISO Standard week number
 
-while [ "$1" != "" ]; do
-    echo "no input"
-    PARAM=`echo $1 | awk -F= '{print $1}'`
-    VALUE=`echo $1 | awk -F= '{print $2}'`
-    case $PARAM in
-        --version)
-            VER=$VALUE
-            ;;
-        --branch)
-            BRANCH=$VALUE
-            ;;
-        --dry-run)
-            DRY_RUN=true
-            ;;
-        --patch)
-            PATCH_RUN=true
-            ;;
-        --help)
-            usage
-            ;;
-        *)
-            echo "ERROR: unknown parameter \"$PARAM\""
-            exit 1
-            ;;
+# sanitize inputs
+for ARGUMENT in "$@"
+do
+    KEY=$(echo $ARGUMENT | cut -f1 -d=)
+    VALUE=$(echo $ARGUMENT | cut -f2 -d=)  
+
+    case "$KEY" in
+            --head)              
+              head=${VALUE} ;;
+
+            --override_version)     
+              override_version=${VALUE} ;;
+
+            *)
+              echo "ERROR: unknown parameter \"$KEY\""
+              exit 1 ;;
     esac
-    shift
 done
 
 echo "fetching latest tags from remote...";
 FETCH=`git fetch --all 2> /dev/null`
 
-if [ -z $VER ]; then
-    VER=`date +'%y.%m'`;
-    echo "release version not supplied, defaulting to $VER";
-else
-    echo "release version supplied - $VER";
+# this prevents from having 1801 at the last week of the year 2019. It should be 1901.
+if [[ ${weeknumber} -eq 1 ]] && [[ `date -u -d ${forced_date} +%-d` -gt 20 ]]; then
+  year=$(expr ${year} + 1)
 fi
 
-CURR_TAG=`git tag -l --sort=-version:refname "$VER*" | head -n 1 2>/dev/null`;
-if [ -z $CURR_TAG ]; then
-    echo "No prior tags found, using default incrementer";
-else
-    echo "prior tags ($CURR_TAG) found, checking incrementer";
-    IFS='.-' read -r -a array <<< "$CURR_TAG"
-    VER="${array[0]}.${array[1]}"
-    INC=${array[2]}
-    PATCH=${array[3]:-0}
-    if [ $PATCH_RUN == false ]; then
-        INC=$(($INC + 1))
+# this prevents from having 1053 at the last week of the year 2010. It should be 0953.
+if [[ ${weeknumber} -ge 52 ]] && [[ `date -u -d ${forced_date} +%-d` -le 7 ]]; then
+    year=$(expr ${year} - 1)
+fi
+
+yearweek="${year:2:2}${weeknumber}"
+
+if [ -z ${override_version} ]; then
+    lastest=`git tag | sort -g | tail -1`
+    latestHead=`echo $lastest | cut -d. -f1`
+    latestYearweek=`echo $lastest | cut -d. -f2`
+    latestBuild=`echo $lastest | cut -d. -f3`
+
+    printf "latest $latestHead.$latestYearweek.$latestBuild\n"
+
+    if [ -z ${lastest} ]; then
+        head="0"
+        build="0"
+        echo "- Warning: There is no tag. set to default.";
+    else
+        if [ -z ${head} ]; then
+            if [ -z ${latestHead} ]; then
+              head="0"
+              echo "- Warning: no head value. set to 0 by default.";
+            else
+              head=$latestHead
+            fi
+        fi
+
+        if [ -z ${latestBuild} ]; then
+            build="0"
+            echo "- Warning: no build value. set to 0 by default."
+        else
+            build=$(($latestBuild + 1))
+        fi
+
+        if [ "$yearweek" != "$latestYearweek" ]; then
+            build="0"      
+            echo "- Warning: yearweek is changed"
+        fi
     fi
-    echo "setting incrementer to $INC";
-    echo "setting patch to $PATCH";
+
+    version="$head.$yearweek.$build"
+else
+    echo "- Warning: head, build, suffix values will be ignored"
+    version=${override_version}
 fi
 
-NEW_TAG="$VER.$INC"
-if [ $PATCH_RUN == true ]; then
-    echo "patch run is true identified"
-    PATCH=$(($PATCH + 1))
-    NEW_TAG="$NEW_TAG-$PATCH"
-fi
-if [ $DRY_RUN = true ]; then
-    echo "dry run enabled, new tag is ($NEW_TAG)"
-else
-    echo "creating new tag ($NEW_TAG) from ($BRANCH)"
-    git push origin refs/remotes/origin/$BRANCH:refs/tags/$NEW_TAG
-fi
+printf "version: $version\n"
+
+git tag "staging-$version"
+git push origin --tags
