@@ -12,7 +12,8 @@ jobs:
         with:
           ref: "main"
 
-      - run: |
+      - name: Add tag
+        run: |
           version=""
           yearweek=""
           year=`date +%Y`
