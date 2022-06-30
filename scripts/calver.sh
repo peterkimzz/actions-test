@@ -25,7 +25,8 @@ done
 echo "fetching latest tags from remote...";
 FETCH=`git fetch --all 2> /dev/null`
 
-printf "git tag | sort -g"
+tags='git tag | sort -g'
+printf $tags;
 
 # this prevents from having 1801 at the last week of the year 2019. It should be 1901.
 if [[ ${weeknumber} -eq 1 ]] && [[ `date -u -d ${forced_date} +%-d` -gt 20 ]]; then
@@ -44,6 +45,10 @@ if [ -z ${override_version} ]; then
     latestHead=`echo $lastest | cut -d. -f1`
     latestYearweek=`echo $lastest | cut -d. -f2`
     latestBuild=`echo $lastest | cut -d. -f3`
+
+    printf "$latestHead\n"
+    printf "$latestYearweek\n"
+    printf "$latestBuild\n"
 
     printf "latest $latestHead.$latestYearweek.$latestBuild\n"
 
@@ -82,5 +87,5 @@ fi
 
 printf "version: $version\n"
 
-git tag "staging-$version"
-git push origin --tags
+# git tag "staging-$version"
+# git push origin --tags
