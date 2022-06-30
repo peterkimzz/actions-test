@@ -23,7 +23,7 @@ do
 done
 
 echo "fetching latest tags from remote...";
-FETCH=`git fetch --all 2> /dev/null`
+git fetch --depth=1 origin +refs/tags/*:refs/tags/*
 
 git tag | sort -g > tag.txt
 cat tag.txt
