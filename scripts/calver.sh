@@ -41,7 +41,7 @@ fi
 yearweek="${year:2:2}${weeknumber}"
 
 if [ -z ${override_version} ]; then
-    lastest=`git tag | sort -g | tail -1`
+    lastest=`git tag | grep "staging*" | sort -g | tail -1`
     latestHead=`echo $lastest | cut -d. -f1`
     latestYearweek=`echo $lastest | cut -d. -f2`
     latestBuild=`echo $lastest | cut -d. -f3`
