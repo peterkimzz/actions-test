@@ -25,9 +25,6 @@ done
 echo "fetching latest tags from remote...";
 git fetch --depth=1 origin +refs/tags/*:refs/tags/*
 
-git tag | sort -g > tag.txt
-cat tag.txt
-
 # this prevents from having 1801 at the last week of the year 2019. It should be 1901.
 if [[ ${weeknumber} -eq 1 ]] && [[ `date -u -d ${forced_date} +%-d` -gt 20 ]]; then
   year=$(expr ${year} + 1)
@@ -59,11 +56,11 @@ if [ -z ${override_version} ]; then
         echo "- Warning: There is no tag. set to default.";
     else
         if [ -z ${head} ]; then
-            if [ -z ${latestHead} ]; then
+            if [ -z ${latestCutHead} ]; then
               head="0"
               echo "- Warning: no head value. set to 0 by default.";
             else
-              head=$latestHead
+              head=$latestCutHead
             fi
         fi
 
@@ -88,5 +85,5 @@ fi
 
 printf "version: $version\n"
 
-git tag "staging-$version"
-git push origin --tags
+# git tag "staging-$version"
+# git push origin --tags
