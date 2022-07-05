@@ -1,4 +1,4 @@
-#!/bin/sh -l
+#!/bin/bash
 
 # NOTE: this file is made by https://github.com/line/headver/blob/main/examples/bash.md.
 
