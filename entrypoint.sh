@@ -39,11 +39,7 @@ fi
 yearweek="${year:2:2}${weeknumber}"
 
 if [ -z ${override_version} ]; then
-    head=$(cat package.json \
-      | grep version \
-      | head -1 \
-      | awk -F: '{ print $2 }' \
-      | sed 's/[",]//g')
+    head=$(cat ./package.json | grep -m 1 version | sed 's/[^0-9.]//g')
 
     printf "current the calver head version pasred from package.json: $head\n"
 
