@@ -1,0 +1,16 @@
+on: [push]
+
+jobs:
+  add-calver:
+    runs-on: ubuntu-latest
+
+    name: Add a calver tag
+
+    steps:
+      # To use this repository's private action,
+      # you must check out the repository
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Add a tag
+        uses: ./
