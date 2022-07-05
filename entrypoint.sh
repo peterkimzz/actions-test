@@ -27,12 +27,12 @@ echo "fetching latest tags from remote...";
 git fetch --depth=1 origin +refs/tags/*:refs/tags/*
 
 # this prevents from having 1801 at the last week of the year 2019. It should be 1901.
-if [[ ${weeknumber} -eq 1 ]] && [[ `date -u -d ${forced_date} +%-d` -gt 20 ]]; then
+if [ ${weeknumber} -eq 1 ] && [ `date -u -d ${forced_date} +%-d` -gt 20 ]; then
   year=$(expr ${year} + 1)
 fi
 
 # this prevents from having 1053 at the last week of the year 2010. It should be 0953.
-if [[ ${weeknumber} -ge 52 ]] && [[ `date -u -d ${forced_date} +%-d` -le 7 ]]; then
+if [ ${weeknumber} -ge 52 ] && [ `date -u -d ${forced_date} +%-d` -le 7 ]; then
     year=$(expr ${year} - 1)
 fi
 
